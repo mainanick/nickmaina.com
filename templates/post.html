@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - nickmaina{% endblock %}
+
+{% block head %}
+    {{ super() }}
     {% if private -%}
     <meta name="robots" content="noindex, nofollow">
     {% endif -%}
-    <link href="./main.css" rel="stylesheet">
-    <title>{{ title }}</title>
-</head>
-<body>
-    <div class="prose bg-red-500">
-        {{ content }}
-    </div>
-    
-    <p>Published on {{ date }}</p>
-</body>
-</html>
+{% endblock %}
+
+{% block content %}
+<div class="prose bg-red-500">
+    {{ content }}
+</div>
+
+<p>Published on {{ date }}</p>
+{% endblock %}

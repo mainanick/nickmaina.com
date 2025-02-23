@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}nickmaina{% endblock %}
+{% block title %}{{ tag }} - nickmaina{% endblock %}
 
 {% block content %}
     {% for post in posts %}
+        {% if not post.private %}
             <div >
                 <h2><a href="/{{ post.url }}">{{ post.title }}</a></h2>
             </div>
+        {% endif %}
     {% endfor %}
 
 {% endblock %}
