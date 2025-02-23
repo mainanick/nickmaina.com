@@ -1,0 +1,22 @@
+{
+    "name": "nickmaina.com",
+    "private": "true",
+    "version": "1.0.0",
+    "description": "Personal website for Nick Maina",
+    "scripts": {
+        "css": "tailwindcss -i ./css/main.css -o ./dist/main.css",
+        "css:watch": "tailwindcss -i ./css/main.css -o ./dist/main.css --watch",
+        "build": "python scripts/build.py && pnpm run css",
+        "watch": "nodemon --watch notes --watch templates --watch css -e md,html,css --exec pnpm run build ",
+        "serve": "python -m http.server --directory dist"
+    },
+    "devDependencies": {
+        "@tailwindcss/typography": "^0.5.16",
+        "nodemon": "^3.1.9",
+        "vite": "^6.1.1"
+    },
+    "dependencies": {
+        "@tailwindcss/cli": "^4.0.8",
+        "tailwindcss": "^4.0.8"
+    }
+}
