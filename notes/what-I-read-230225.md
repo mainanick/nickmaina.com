@@ -1,6 +1,7 @@
 ---
 layout: post
 title: What I Read This Week
+permalink: what-I-read-240425
 tags:
   - week-reads
   - library

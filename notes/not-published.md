@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Not Published
+permalink: not-published
 tags:
   - logistics
   - library

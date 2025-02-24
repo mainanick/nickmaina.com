@@ -2,17 +2,13 @@ from datetime import datetime
 from pathlib import Path
 import markdown
 import frontmatter
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-import shortuuid
+from jinja2 import Environment, FileSystemLoader
 from slugify import slugify
 from dataclasses import dataclass
 import click
 
 cwd = Path.cwd()
-env = Environment(
-    loader=FileSystemLoader(cwd / "templates"),
-    # autoescape=select_autoescape()
-)
+env = Environment(loader=FileSystemLoader(cwd / "templates"))
 
 post_template = env.get_template("post.html")
 index_template = env.get_template("index.html")
@@ -32,46 +28,28 @@ all_private_notes = list(private_notes.glob("*.md"))
 class Post:
     layout: str
     title: str
-    slug: str
     tags: list[str]
     content: str
     date: str
     py_date: datetime
     permalink: str
-    filename: str
-    filepath: Path
-    url: str
     private: bool
     published: bool
-
-
-def mini_id():
-    return str(shortuuid.uuid())[:4]
 
 
 def to_post(note: Path) -> Post:
     md = frontmatter.load(note)
     content = markdown.markdown(md.content)
-    slug = slugify(md.get("title", "")) + "-" + mini_id()
-
-    private = md.get("private", True)
-    p = private_dist if private else dist
-    url = md.get("permalink", slug) + ".html"
-    u = url if not private else "__private/" + url
 
     post = Post(
         layout=md.get("layout", "post"),
         title=md.get("title", ""),
-        slug=slug,
         tags=md.get("tags", []),
         content=content,
         date=md.get("date", ""),
         py_date=datetime.strptime(md.get("date", ""), "%d-%m-%Y %H:%M:%S %z"),
-        permalink=md.get("permalink", url),
-        url=u,
-        filename=url,
-        filepath=p / url,
-        private=private,
+        permalink=md.get("permalink"),
+        private=md.get("private", True),
         published=md.get("published", False),
     )
     return post
@@ -154,7 +132,8 @@ def build_index(posts: list[Post]):
 def build_posts(posts: list[Post]):
     for post in posts:
         html = render_post(post)
-        post.filepath.write_text(html)
+        path = private_dist if post.private else dist
+        (path / (post.permalink + ".html")).write_text(html)
 
 
 @click.group()

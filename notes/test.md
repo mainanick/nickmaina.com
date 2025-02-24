@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Portboxes ParcelShop
+permalink: test
 tags:
   - logistics
   - library
