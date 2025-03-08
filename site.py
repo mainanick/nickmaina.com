@@ -9,6 +9,15 @@ from dataclasses import dataclass, field
 from typing import List, Dict, Optional
 import click
 import shutil
+import yaml
+
+
+@dataclass
+class SiteConfig:
+    name: str
+    url: str
+    tags: List[str] = field(default_factory=list)
+
 
 @dataclass
 class Post:
@@ -31,16 +40,20 @@ class StaticSiteGenerator:
             "post": self.env.get_template("post.html"),
             "index": self.env.get_template("index.html"),
             "tags": self.env.get_template("tags.html"),
-            "tag_list": self.env.get_template("tag_list.html")
+            "tag_list": self.env.get_template("tag_list.html"),
         }
-        
+
+        with open(self.cwd / "site.yaml", "r") as siteYaml:
+            yml = yaml.load(siteYaml, yaml.SafeLoader)
+            self.config = SiteConfig(**yml)
+
         self.notes_dir = self.cwd / "notes"
-        self.private_notes_dir = self.notes_dir / "__private"
+        # self.private_notes_dir = self.notes_dir / "__private"
         self.dist_dir = self.cwd / "dist"
-        self.private_dist_dir = self.dist_dir / "__private"
-        
+        # self.private_dist_dir = self.dist_dir / "__private"
+
         self.posts = []
-    
+
     def load_posts(self) -> None:
         """Load all posts from notes directories"""
         # Process public notes
@@ -48,20 +61,28 @@ class StaticSiteGenerator:
             post = self._parse_post(note_path)
             if post.published:
                 self.posts.append(post)
-        
+
         # Process private notes
-        for note_path in self.private_notes_dir.glob("*.md"):
-            post = self._parse_post(note_path)
-            if post.published:
-                self.posts.append(post)
-        
+        # for note_path in self.private_notes_dir.glob("*.md"):
+        #     post = self._parse_post(note_path)
+        #     if post.published:
+        #         self.posts.append(post)
+
+        self._validate_tags(self.posts)
+
         # Sort posts by date (newest first)
         self.posts.sort(key=lambda p: p.py_date or datetime.min, reverse=True)
-    
+
+    def _validate_tags(self, posts: List[Post]):
+        allowed_tags = set(self.config.tags)
+        invalid_tags = {tag for post in posts for tag in post.tags if tag not in allowed_tags}
+        if invalid_tags:
+            raise RuntimeError(f"Invalid tags found: {', '.join(invalid_tags)}. Check allowed tags in site.yaml")
+
     def _parse_post(self, note_path: Path) -> Post:
         """Parse a markdown file into a Post object"""
         md = frontmatter.load(note_path)
-        
+
         # Parse date once
         date_str = md.get("date", "")
         py_date = None
@@ -70,7 +91,7 @@ class StaticSiteGenerator:
                 py_date = datetime.strptime(date_str, "%d-%m-%Y %H:%M:%S %z")
             except ValueError:
                 pass  # Handle invalid date format gracefully
-        
+
         return Post(
             layout=md.get("layout", "post"),
             title=md.get("title", ""),
@@ -80,68 +101,69 @@ class StaticSiteGenerator:
             py_date=py_date,
             permalink=md.get("permalink", ""),
             private=md.get("private", True),
-            published=md.get("published", False)
+            published=md.get("published", False),
         )
-    
+
     def clear_dist(self) -> None:
         """Remove the dist directory if it exists"""
         if self.dist_dir.exists():
             shutil.rmtree(self.dist_dir)
-    
+
     def make_dist_dirs(self) -> None:
         """Create necessary directories"""
         self.dist_dir.mkdir(exist_ok=True)
-        self.private_dist_dir.mkdir(exist_ok=True)
+        # self.private_dist_dir.mkdir(exist_ok=True)
         (self.dist_dir / "tags").mkdir(exist_ok=True)
-    
+
     def build_posts(self) -> None:
         """Build HTML files for all posts"""
         for post in self.posts:
             template = self.templates.get(post.layout, self.templates["post"])
             html = template.render(**post.__dict__)
-            
-            output_dir = self.private_dist_dir if post.private else self.dist_dir
+
+            # output_dir = self.private_dist_dir if post.private else self.dist_dir
+            output_dir = self.dist_dir
             output_path = output_dir / f"{post.permalink}.html"
             output_path.write_text(html)
-    
+
     def build_indexes(self) -> None:
         """Build index pages for public and private posts"""
         public_posts = [p for p in self.posts if not p.private]
-        private_posts = [p for p in self.posts if p.private]
-        
+        # private_posts = [p for p in self.posts if p.private]
+
         # Build public index
         public_index_html = self.templates["index"].render(posts=public_posts)
         (self.dist_dir / "index.html").write_text(public_index_html)
-        
+
         # Build private index
-        private_index_html = self.templates["index"].render(posts=private_posts)
-        (self.private_dist_dir / "index.html").write_text(private_index_html)
-    
+        # private_index_html = self.templates["index"].render(posts=private_posts)
+        # (self.private_dist_dir / "index.html").write_text(private_index_html)
+
     def build_tag_pages(self) -> None:
         """Build tag index and individual tag pages"""
         # Skip tag generation if no public posts
         public_posts = [p for p in self.posts if not p.private]
         if not public_posts:
             return
-            
+
         # Group posts by tag
         tag_posts: Dict[str, List[Post]] = {}
         for post in public_posts:
             for tag in post.tags:
                 tag_posts.setdefault(tag, []).append(post)
-        
+
         # Build tag index page
         tag_index_html = self.templates["tag_list"].render(tags=sorted(tag_posts.keys()))
         (self.dist_dir / "tags" / "index.html").write_text(tag_index_html)
-        
+
         # Build individual tag pages
         for tag, posts in tag_posts.items():
             tag_dir = self.dist_dir / "tags" / tag
             tag_dir.mkdir(parents=True, exist_ok=True)
-            
+
             tag_html = self.templates["tags"].render(posts=posts, tag=tag)
             (tag_dir / "index.html").write_text(tag_html)
-    
+
     def build(self) -> None:
         """Execute the full build process"""
         self.clear_dist()
@@ -150,10 +172,11 @@ class StaticSiteGenerator:
         self.build_posts()
         self.build_indexes()
         self.build_tag_pages()
-    
+
     def publish(self, skip_build=False) -> None:
         """Publish the site. SFPT to a server, etc."""
-        pass 
+        pass
+
 
 @click.group()
 def cli():

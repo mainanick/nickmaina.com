@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     {% block head %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %}</title>
-    <link href="./main.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
     {% endblock %}
-</head>
-<body>
-    <div id="content">{% block content %}{% endblock %}</div>
-</body>
+  </head>
+  <body>
+    <header
+      class="flex flex-col justify-center items-center mb-5 font-bold text-2xl"
+    >
+      <a href="/">nickmaina</a>
+    </header>
+    <div
+      id="content"
+      class="mx-4 md:mx-4 flex flex-col justify-center sm:items-center"
+    >
+      {% block content %}{% endblock %}
+    </div>
+  </body>
 </html>
