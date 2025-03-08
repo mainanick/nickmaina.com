@@ -6,7 +6,7 @@
     "scripts": {
         "css": "tailwindcss -i ./css/main.css -o ./dist/main.css",
         "css:watch": "tailwindcss -i ./css/main.css -o ./dist/main.css --watch",
-        "build": "python site.py build && pnpm run css",
+        "build": "python pen.py build && pnpm run css",
         "watch": "nodemon --watch notes --watch templates --watch css -e md,html,css --exec pnpm run build ",
         "serve": "python -m http.server --bind 127.0.0.1 --directory dist"
     },

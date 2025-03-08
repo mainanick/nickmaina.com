@@ -13,5 +13,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13' 
-      - run: python site.py build
-      - run: python site.py deploy
+      - run: python pen.py build
+      - run: python pen.py deploy

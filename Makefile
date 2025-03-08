@@ -4,12 +4,12 @@ css:
 	pnpm run css
 
 clear:
-	python site.py clear
+	python pen.py clear
 
 build:
-	python site.py build
+	python pen.py build
 
 lint:
-	black site.py --line-length 120 --target-version py38
+	black pen.py --line-length 120 --target-version py38
 	
 all: build css
