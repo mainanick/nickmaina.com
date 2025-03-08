@@ -43,7 +43,7 @@ class StaticSiteGenerator:
             "tag_list": self.env.get_template("tag_list.html"),
         }
 
-        with open(self.cwd / "site.yaml", "r") as siteYaml:
+        with open(self.cwd / "pen.yaml", "r") as siteYaml:
             yml = yaml.load(siteYaml, yaml.SafeLoader)
             self.config = SiteConfig(**yml)
 
