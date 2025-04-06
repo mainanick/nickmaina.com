@@ -4,6 +4,7 @@ title: Warren Buffett's Grandfather's Lesson on Emergency Savings
 permalink: warren-buffett-grandfather-emergency-savings
 tags:
   - personal-finance
+  - personal
 published: true
 private: false
 date: 08-03-2025 20:21:00 +0300
