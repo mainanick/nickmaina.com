@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sarns</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <style>
+    /* 1. Use a more-intuitive box-sizing model */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    /* 2. Remove default margin */
+    * {
+      margin: 0;
+    }
+
+    /* 3. Enable keyword animations */
+    @media (prefers-reduced-motion: no-preference) {
+      html {
+        interpolate-size: allow-keywords;
+      }
+    }
+
+    body {
+      /* 4. Add accessible line-height */
+      line-height: 1.5;
+      /* 5. Improve text rendering */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 6. Improve media defaults */
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* 7. Inherit fonts for form controls */
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    /* 8. Avoid text overflows */
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      overflow-wrap: break-word;
+    }
+
+    /* 9. Improve line wrapping */
+    p {
+      text-wrap: pretty;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-wrap: balance;
+    }
+
+    /*
+  10. Create a root stacking context
+*/
+    #root,
+    #__next {
+      isolation: isolate;
+    }
+  </style>
+  <style>
+    body {
+      font-family: "Merriweather Sans", sans-serif;
+      background: #000000;
+      color: #ffffff;
+    }
+    .logo {
+      /* border: #fff 2px solid; */
+      /* border-radius: 4px; */
+      padding: 4px;
+      font-size: 30px;
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
+    }
+    .logo p {
+      /* background: #ffffff; */
+      border-radius: 2px;
+      padding: 0px 2px;
+      /* color: #000000; */
+      margin: 0;
+      font-weight: 600;
+    }
+  </style>
+  <body>
+    <div class="logo">
+      <p>nickmaina</p>
+    </div>
+  </body>
+</html>
