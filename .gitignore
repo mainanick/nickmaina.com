@@ -1,7 +1,7 @@
 .obsidian/
 publish.sh
 publish.bat
-
+*.zip
 
 # Created by https://www.toptal.com/developers/gitignore/api/go,node,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,node,python
